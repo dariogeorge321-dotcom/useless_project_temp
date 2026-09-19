@@ -63,37 +63,30 @@ For Software:
 
 # Diagrams
 
-# Diagrams
+### Architecture & Application Flow
 
-```mermaid
-graph TD
-    %% Core Linear Flow
-    Init[App Init] --> S0[Stage 0: Journal]
-    S0 -- Char Limit Met --> S1[Stage 1: Evasive Captcha]
-    S1 -- Clicked 4x --> S2[Stage 2: Card Swipe]
-    S2 -- Swipe within ms window --> S3[Stage 3: Color Mix]
-    S3 -- Picked 2 correct colors --> S4[Stage 4: Audit]
-    S4 -- Answered 5 Qs --> S5[Stage 5: Terms]
-    S5 -- Checked all boxes --> S6[Stage 6: Audio Labor]
-    S6 -- Progress hits 100% --> S7[Stage 7: Incinerator]
-    S7 -- Restart clicked --> Init
-
-    %% Mini-Game Failure Loops
-    S2 -- Wrong speed --> Zen[Zen Bird Overlay]
-    S3 -- Wrong colors --> Zen
-
-    %% Zen Bird Recovery
-    Zen -. 3s Timeout .-> S2
-    Zen -. 3s Timeout .-> S3
-
-    %% Stage 6 Loop
-    S6 -- Mouse Movement --> Calc[Calculate RPM]
-    Calc -- Map to Audio API --> Synth[Update Synth Beat]
-    Calc -- RPM > 160 --> Drain[Panic: Drain Bar]
-    Calc -- 40 to 160 RPM --> Fill[Fill Calmness Bar]
-    Drain --> S6
-    Fill --> S6
-    ```
+[Journal (Stage 0)]
+│
+▼ (Char Limit Met)
+[Evasive Captcha (Stage 1)]
+│
+▼ (4 Clicks Cleared)
+[Card Swipe (Stage 2)] ──(Fail)──► [Zen Bird Overlay (3s Lock)]
+│                                  │
+▼ (Swipe within ms window)         │ (Randomize Parameters)
+[Color Matrix (Stage 3)] ──(Fail)─────────┘
+│
+▼ (2 Correct Colors)
+[Behavioral Audit (Stage 4)]
+│
+▼ (5 Qs Answered)
+[Terms & Consent (Stage 5)]
+│
+▼ (All Boxes Checked)
+[Kinetic Audio Labor (Stage 6)] ──(Mouse/Touch Loop)──► [Web Audio API Synth]
+│
+▼ (Progress Reaches 100%)
+[The Incinerator (Stage 7)] ──► [Indestructible Stress Loop / Restart]
     
 Caption: Stress Fixer 3.0 moves users through 8 sequential DOM sections. To advance, users have to pass specific validation checks (like hitting the right swipe speed or picking the right colors). If they fail Stages 2 or 3, the showZen() function takes over, locking the screen for 3 seconds and randomizing the puzzle parameters so they can't just brute-force it. Stage 6 uses its own requestAnimationFrame loop to continuously track mouse speed and feed that data directly into the Web Audio API.
 
