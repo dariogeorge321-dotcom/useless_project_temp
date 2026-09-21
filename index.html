@@ -39,20 +39,21 @@
     }
 
     * { box-sizing: border-box; }
-    html, body { height: 100%; }
+    html, body { min-height: 100%; width: 100%; overflow-x: hidden; }
     body {
       margin: 0;
       font-family: var(--font);
       color: var(--ink);
+      overflow-y: auto;
       background:
         radial-gradient(1100px 700px at 12% -8%, rgba(56,189,248,0.16), transparent 55%),
         radial-gradient(1000px 720px at 108% 12%, rgba(139,92,246,0.20), transparent 55%),
         radial-gradient(900px 700px at 50% 120%, rgba(34,197,94,0.12), transparent 55%),
         var(--bg-900);
-      min-height: 100dvh;
       -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
     }
+    body.screen-shake { animation: shake 0.3s cubic-bezier(.36,.07,.19,.97) both; }
+    @keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
 
     a { color: var(--cyan); }
 
@@ -62,7 +63,11 @@
     .app {
       max-width: 1120px;
       margin: 0 auto;
-      padding: 28px 22px 64px;
+      padding: 12px 16px 24px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: visible;
     }
 
     .topbar {
@@ -70,7 +75,8 @@
       align-items: center;
       justify-content: space-between;
       gap: 16px;
-      margin-bottom: 28px;
+      margin-bottom: 12px;
+      flex-shrink: 0;
     }
     .brand {
       display: flex;
@@ -111,8 +117,8 @@
 
     /* progress rail */
     .steps {
-      display: flex; gap: 3px; margin: 0 auto 30px; flex-wrap: wrap;
-      justify-content: center;
+      display: flex; gap: 3px; margin: 0 auto 12px; flex-wrap: wrap;
+      justify-content: center; flex-shrink: 0;
     }
     .step {
       font-size: 9.5px; font-weight: 600; letter-spacing: 0.02em;
@@ -143,18 +149,21 @@
       box-shadow: var(--shadow-soft);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
+      max-height: 100%;
+      display: flex; flex-direction: column;
     }
-    .card.pad { padding: 26px; }
+    .card.pad { padding: 22px; }
 
     .eyebrow {
       font-size: 11.5px; font-weight: 700; letter-spacing: 0.18em;
       text-transform: uppercase; color: var(--cyan);
-      display: inline-flex; align-items: center; gap: 8px; margin: 0 0 10px;
+      display: inline-flex; align-items: center; gap: 8px; margin: 0 0 6px;
+      flex-shrink: 0;
     }
-    h1, h2 { letter-spacing: -0.025em; margin: 0; }
-    h1 { font-size: clamp(28px, 5vw, 44px); font-weight: 900; line-height: 1.05; }
-    h2 { font-size: clamp(22px, 3.4vw, 30px); font-weight: 800; }
-    .lede { color: var(--ink-dim); font-size: 15px; line-height: 1.6; margin: 12px 0 0; max-width: 62ch; }
+    h1, h2 { letter-spacing: -0.025em; margin: 0; flex-shrink: 0; }
+    h1 { font-size: clamp(24px, 4vw, 36px); font-weight: 900; line-height: 1.05; }
+    h2 { font-size: clamp(20px, 3vw, 26px); font-weight: 800; }
+    .lede { color: var(--ink-dim); font-size: 14px; line-height: 1.5; margin: 8px 0 0; max-width: 62ch; flex-shrink: 0; }
     .gradient-text {
       background: var(--grad-brand);
       -webkit-background-clip: text; background-clip: text;
@@ -165,9 +174,9 @@
         BUTTONS
     ============================================================ */
     .btn {
-      appearance: none; border: none; cursor: pointer;
+      appearance: none; border: none; cursor: pointer; flex-shrink: 0;
       font-family: inherit; font-weight: 700; font-size: 15px;
-      color: #06121f; padding: 14px 22px; border-radius: 12px;
+      color: #06121f; padding: 12px 20px; border-radius: 12px;
       background: var(--grad-brand-2);
       box-shadow: var(--shadow-glow-violet);
       transition: transform .15s ease, box-shadow .25s ease, opacity .25s ease, filter .2s ease;
@@ -186,22 +195,22 @@
     /* ============================================================
         STAGE VISIBILITY
     ============================================================ */
-    .stage { display: none; animation: rise .5s cubic-bezier(.2,.7,.2,1) both; }
-    .stage.visible { display: block; }
+    .stage { flex: 1; display: none; animation: rise .5s cubic-bezier(.2,.7,.2,1) both; overflow: visible; min-height: 0; padding: 4px; }
+    .stage.visible { display: flex; flex-direction: column; justify-content: flex-start; overflow: visible; }
     @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
 
     /* ============================================================
         STAGE 0 — JOURNAL
     ============================================================ */
     .journal-grid {
-      display: grid; grid-template-columns: 1.5fr 1fr; gap: 20px; align-items: stretch;
+      display: grid; grid-template-columns: 1.5fr 1fr; gap: 16px; align-items: stretch; flex: 1; min-height: 0;
     }
-    .journal-head { margin-bottom: 22px; }
+    .journal-head { margin-bottom: 16px; flex-shrink: 0; }
     textarea.journal {
-      width: 100%; min-height: 260px; resize: vertical;
+      width: 100%; flex: 1; min-height: 120px; resize: none;
       background: rgba(11,17,32,0.6); color: var(--ink);
       border: 1px solid var(--border); border-radius: 14px;
-      padding: 18px; font-size: 16px; line-height: 1.6; font-family: inherit;
+      padding: 16px; font-size: 15px; line-height: 1.5; font-family: inherit;
       transition: border-color .2s ease, box-shadow .2s ease;
     }
     textarea.journal:focus { outline: none; border-color: rgba(56,189,248,0.55); box-shadow: var(--shadow-glow-cyan); }
@@ -496,6 +505,15 @@
     .footer { text-align: center; margin-top: 40px; color: var(--ink-faint); font-size: 12px; }
     @keyframes breathe { 50% { transform: scale(1.06); box-shadow: 0 0 46px -6px rgba(139,92,246,0.7); } }
 
+    /* NEW STYLES */
+    .calm-track.panic { box-shadow: 0 0 20px 5px rgba(251,113,133,0.9); border: 2px solid var(--rose); animation: panicFlash 0.3s infinite; }
+    @keyframes panicFlash { 50% { background: rgba(251,113,133,0.4); } }
+    .frail-man { font-size: 44px; transition: transform 0.1s; display: inline-block; transform-origin: bottom center; }
+    .hidden-hint { font-size: 1px; color: transparent; cursor: default; user-select: none; opacity: 0; transition: opacity 0.2s; }
+    .hidden-hint:hover { opacity: 0.05; }
+    .hidden-hint::selection { color: var(--ink-dim); background: transparent; }
+    .chase-motivation { font-size: 13px; color: var(--amber); font-weight: bold; margin-top: 10px; display: none; animation: rise .3s ease; }
+
     @media (max-width: 760px) {
       .journal-grid, .therapy-grid { grid-template-columns: 1fr; }
       .protocol { grid-template-columns: 1fr; }
@@ -509,7 +527,12 @@
         <span class="logo" aria-hidden="true"></span>
         <span>Stress Fixer 3.0<small>Enterprise-Grade Calm™</small></span>
       </div>
-      <span class="pill"><span class="dot"></span> System: Nominally Therapeutic</span>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <button id="aiConfigBtn" class="pill" title="Click to change or configure your Gemini API Key" style="cursor:pointer;background:var(--glass);border:1px solid var(--border);color:var(--ink-dim);font-family:inherit;">
+          🤖 <span id="aiStatusText">AI: Inactive</span>
+        </button>
+        <span class="pill"><span class="dot"></span> System: Nominally Therapeutic</span>
+      </div>
     </header>
 
     <nav class="steps" id="steps" aria-label="Progress">
@@ -569,11 +592,12 @@
         <h2 id="cap1-title">Verify you are, in fact, not a robot.</h2>
         <p class="lede" style="margin-bottom:24px">Standard human-verification checkbox. It may, occasionally, relocate.</p>
 
-        <div class="robot-box">
+        <div class="robot-box" id="robotBoxContainer">
           <div class="checkbox-hit" id="robotCheck" role="checkbox" aria-checked="false" tabindex="0" aria-label="I am not a robot"></div>
           <div class="label">I'm not a robot</div>
           <div class="brandmark"><b>hCalmpcha</b>Privacy · Terms</div>
         </div>
+        <p class="chase-motivation" id="chaseMotivation"></p>
         <p class="hint" id="cap1Hint">Click the box. <b>It won't be easy.</b></p>
       </div>
     </section>
@@ -602,6 +626,7 @@
             <span id="swipeMs">swipe time: — ms</span>
             <span id="swipeTarget">target speed: calculating...</span>
           </div>
+          <p id="swipeHint" style="font-size:12.5px;color:var(--amber);margin:10px 0 0;font-weight:600;text-align:center;min-height:18px;"></p>
         </div>
       </div>
     </section>
@@ -617,6 +642,7 @@
         <p id="mixingPrompt" style="font-weight: 700; color: var(--cyan); font-size: 14.5px; margin: 8px 0;">Target: Despair Indigo (#3b185f)</p>
 
         <div class="ingredients-grid-6" id="ingredientsGrid6"></div>
+        <p class="hidden-hint" id="hiddenColorHint">Hint: The recipe for Despair Indigo is Unopened Email Orange + Imposter Syndrome Cyan.</p>
 
         <button class="btn wide" id="mixConfirm" style="margin-top: 10px;" disabled>Synthesize Colors</button>
         <p class="hint" id="mixHint">Incorrect combination triggers a chromatic meltdown &amp; relaxation break.</p>
@@ -756,8 +782,11 @@
 
           <div id="pumpControls" style="display:none; margin-top:16px;">
             <p style="font-size:13px; color:var(--rose); margin-bottom:8px;">🔥 <b>HARDCORE BLOWER:</b> Extreme air leak! <b>Click frantically</b> to reach 200% pressure!</p>
+            <div style="font-size: 40px; margin: 10px 0;">
+              <span class="frail-man" id="frailMan">👴</span>💨
+            </div>
             <div class="pump-meter"><div class="pump-fill" id="pumpFill" style="width: 50%;"></div></div>
-            <button class="btn wide" id="pumpBtn" style="background:linear-gradient(135deg, #f59e0b, #ef4444); color:#fff;">💨 PUMP AIR BLOWER</button>
+            <button class="btn wide" id="pumpBtn" style="background:linear-gradient(135deg, #f59e0b, #ef4444); color:#fff;">PUMP AIR BLOWER</button>
           </div>
 
           <div style="margin-top:16px;">
@@ -773,6 +802,47 @@
     </footer>
   </main>
 
+  <!-- ========== GEMINI API KEY OVERLAY (OPTIONAL, NEVER BLOCKS VISITORS) ========== -->
+  <div id="apiKeyOverlay" style="
+    position:fixed;inset:0;z-index:200;background:rgba(11,17,32,0.96);
+    display:none;place-items:center;padding:24px;
+  ">
+    <div style="
+      background:#0f172a;border:1px solid rgba(56,189,248,0.35);border-radius:20px;
+      padding:36px 40px;max-width:460px;width:100%;box-shadow:0 0 60px rgba(56,189,248,0.15);
+      text-align:center;position:relative;
+    ">
+      <button id="apiKeyCloseTop" style="position:absolute;top:16px;right:18px;background:none;border:none;color:#94a3b8;font-size:20px;cursor:pointer;">✕</button>
+      <div style="font-size:42px;margin-bottom:12px;">🤖</div>
+      <h2 style="margin:0 0 8px;font-size:22px;font-weight:900;letter-spacing:-0.02em;color:#e2e8f0;">
+        AI Engine Settings
+      </h2>
+      <p style="color:#94a3b8;font-size:13.5px;line-height:1.55;margin:0 0 18px;">
+        Stress Fixer 3.0 includes a <b>built-in satirical AI engine</b> that runs automatically for all visitors with zero keys needed.<br><br>
+        Optionally, enter a <a href="https://aistudio.google.com/apikey" target="_blank" style="color:#38bdf8;">Google Gemini API key</a> if you want to route queries through live Gemini 2.0.
+      </p>
+      <input id="apiKeyInput" type="password" placeholder="AIza..." style="
+        width:100%;padding:13px 16px;border-radius:10px;border:1px solid rgba(56,189,248,0.4);
+        background:rgba(11,17,32,0.8);color:#e2e8f0;font-size:15px;font-family:inherit;
+        outline:none;box-sizing:border-box;margin-bottom:14px;
+      "/>
+      <button id="apiKeySubmit" style="
+        width:100%;padding:14px;border-radius:12px;border:none;cursor:pointer;
+        background:linear-gradient(135deg,#38bdf8,#8b5cf6);color:#06121f;
+        font-weight:800;font-size:15px;font-family:inherit;
+      ">Connect Gemini Cloud AI →</button>
+      <button id="apiKeySkip" style="
+        width:100%;padding:10px;margin-top:10px;border-radius:12px;border:1px solid rgba(148,163,184,0.2);
+        background:transparent;color:#94a3b8;font-size:13px;font-family:inherit;cursor:pointer;
+      ">✕ Close (Keep Built-in AI Active)</button>
+      <button id="apiKeyClear" style="
+        display:none;width:100%;padding:9px;margin-top:10px;border-radius:10px;border:1px dashed rgba(251,113,133,0.4);
+        background:rgba(251,113,133,0.08);color:#fb7185;font-size:12px;font-family:inherit;cursor:pointer;
+      ">🗑️ Remove Gemini Cloud Key</button>
+      <p id="apiKeyError" style="color:#fb7185;font-size:12px;margin:10px 0 0;display:none;">Invalid key format. Check and retry.</p>
+    </div>
+  </div>
+
   <!-- ZEN BIRD OVERLAY (Strict White Window Requirement) -->
   <div class="zen" id="zen" role="alertdialog" aria-live="assertive" aria-label="Calming interruption">
     <div class="white-window">
@@ -786,12 +856,310 @@
 
   <!-- THERAPEUTIC AUDIO -->
   <audio id="audio" src="frantic.mp3" loop preload="auto"></audio>
+  <audio id="spike1" src="spike1.mp3" preload="auto"></audio>
+  <audio id="spike2" src="spike2.mp3" preload="auto"></audio>
+  <audio id="spike3" src="spike3.mp3" preload="auto"></audio>
+  <audio id="spike4" src="spike4.mp3" preload="auto"></audio>
+  <audio id="spike5" src="spike5.mp3" preload="auto"></audio>
+  <audio id="zenAudio" src="zen.mp3" preload="auto"></audio>
+
 
   <script>
   (function () {
     "use strict";
 
+    /* =====================================================
+       GEMINI AI INTEGRATION
+    ===================================================== */
+    var SF3_PERSONA = [
+      "You are the AI diagnostic core of Stress Fixer 3.0, an enterprise-grade wellness platform.",
+      "Your tone: bureaucratic corporate wellness jargon fused with gentle satirical gaslighting.",
+      "You are funny, darkly witty, and always subtly (never cruelly) point the user as the root cause of their own problems.",
+      "Use enterprise therapy language: 'cognitive throughput', 'emotional ROI', 'stress inventory', 'bottleneck', 'mental load optimization', 'proactive anxiety', 'self-generated friction'.",
+      "NEVER break character. NEVER be genuinely mean. Always be absurdly professional.",
+      "Keep all output SHORT — 1 to 2 sentences unless instructed otherwise. No markdown, no bullet points, plain prose only."
+    ].join(" ");
+
+    // Optional: paste your Gemini API key here if you want cloud Gemini
+    var HARDCODED_API_KEY = "";
+
+    var aiEnabled = false;
+
+    function getKey() {
+      return HARDCODED_API_KEY || localStorage.getItem('sf3_apikey') || sessionStorage.getItem('sf3_apikey') || '';
+    }
+
+    /* =====================================================
+       LOCAL SATIRICAL COGNITIVE ENGINE (ZERO-KEY CLIENT AI)
+       Runs for 100% of visitors automatically with no setup.
+    ===================================================== */
+    function runLocalCognitiveEngine(prompt, fallback) {
+      if (!prompt) return fallback;
+
+      // 1. Color mixing fail taunt
+      if (prompt.indexOf('In a colour-mixing captcha') !== -1) {
+        var matchTarget = prompt.match(/target was "([^"]+)"/);
+        var matchPicked = prompt.match(/user instead picked: ([^\.]+)\./);
+        var tName = matchTarget ? matchTarget[1] : 'the target color';
+        var pName = matchPicked ? matchPicked[1] : 'unrelated ingredients';
+        var colorTaunts = [
+          "Chromatic Meltdown! You blended " + pName + " attempting to synthesize " + tName + ". That combination does not exist in any certified wellness framework. A new chromatic test has been deployed.",
+          "Failure detected! Combining " + pName + " to achieve " + tName + " is mathematically and emotionally incoherent. Telemetry notes this as aesthetic confusion.",
+          "Synthesizing " + tName + " requires precise emotional calibration, not whatever chaotic blend of " + pName + " you just produced. A fresh challenge awaits."
+        ];
+        return colorTaunts[Math.floor(Math.random() * colorTaunts.length)];
+      }
+
+      // 2. Audit Clinical Diagnosis
+      if (prompt.indexOf('Write a SHORT (3-4 sentence) satirical clinical diagnosis') !== -1) {
+        var yesMatches = (prompt.match(/→ YES/g) || []).length;
+        var noMatches  = (prompt.match(/→ NO/g) || []).length;
+        
+        var syndromes = [
+          "Proactive Hyper-Manufactured Bottleneck Complex (Grade IV)",
+          "Artisanal Catastrophe Cultivation & Martyrdom Syndrome",
+          "Pathological Externalization & Defensive Inertia Disorder",
+          "Chronic Self-Imposed Calendar Hostage Situation"
+        ];
+        var sName = syndromes[yesMatches >= 3 ? 1 : (noMatches >= 3 ? 2 : 0)];
+
+        var diagnoses = [
+          "Clinical Assessment: " + sName + ". Diagnostic telemetry confirms that approximately 96.8% of your current cognitive load is self-curated fiction produced with exceptional dedication. While you entered this intake claiming external pressures, the audit demonstrates that you are both the arsonist and the emergency response team of your daily schedule. We recommend accepting that serenity was readily available to you at all times, but was declined due to a profound addiction to dramatic tension.",
+          "Clinical Assessment: " + sName + ". Comprehensive audit telemetry reveals an individual performing gold-medal mental gymnastics over low-stakes ambient stimuli. You have systematically engineered every bottleneck in your life while maintaining complete theatrical innocence. The system officially finds you 100% guilty of your own stress. Proceed immediately to pointer therapy to work off this self-inflicted deficit.",
+          "Clinical Assessment: " + sName + ". Telemetry analysis indicates that peace of mind has repeatedly attempted to enter your life, but was rejected by your internal security policy. You have curated an emotional inventory so excessively bloated that standard coping mechanisms have collapsed under the weight of your artisanal anxiety. You are the architect, contractor, and tenant of your own dilemma."
+        ];
+        return diagnoses[Math.floor(Math.random() * diagnoses.length)];
+      }
+
+      // 3. Audit Reaction Bubble
+      if (prompt.indexOf('Audit question asked:') !== -1 && prompt.indexOf('User answered:') !== -1) {
+        var isYes = prompt.indexOf('User answered: YES') !== -1;
+        var yesReactions = [
+          "Admission logged. Full culpability acknowledged, yet remedial action remains at zero percent.",
+          "Fascinating confession. You are actively funding the drama you complain about.",
+          "Honesty registered. Knowing you are the bottleneck does not prevent you from being it.",
+          "Confirmed. The system respects your total lack of interest in self-improvement."
+        ];
+        var noReactions = [
+          "Denial barrier engaged. The algorithm has logged your response under 'protective delusion'.",
+          "Statistically improbable innocence. Telemetry suggests you are gaslighting yourself.",
+          "A spirited defense. However, your cursor jitter indicates elevated cognitive friction.",
+          "Denial noted. Our psychological models remain entirely unconvinced."
+        ];
+        return isYes
+          ? yesReactions[Math.floor(Math.random() * yesReactions.length)]
+          : noReactions[Math.floor(Math.random() * noReactions.length)];
+      }
+
+      // 4. Audit Questions (Q1 to Q5)
+      if (prompt.indexOf('root-cause behavioral audit') !== -1 || prompt.indexOf('Generate question') !== -1) {
+        var journalText = (document.getElementById('journal') ? document.getElementById('journal').value : '').toLowerCase();
+        var qIdxMatch = prompt.match(/question (\d) of 5/);
+        var qNum = qIdxMatch ? parseInt(qIdxMatch[1], 10) : 1;
+
+        if (qNum === 1) {
+          if (/(work|job|boss|deadline|meeting|slack|email|task|client|code|deploy)/i.test(journalText)) {
+            return "Do you deliberately procrastinate on high-priority tasks just to experience the theatrical dopamine of an avoidable crisis?";
+          }
+          if (/(sleep|tired|exhaust|bed|rest|wake|drained)/i.test(journalText)) {
+            return "Do you treat being chronically exhausted as an unearned badge of moral superiority over well-rested peers?";
+          }
+          if (/(people|friend|relationship|alone|partner|family|social)/i.test(journalText)) {
+            return "Do you mentally rehearse preemptive apologies for conversations that haven't actually occurred yet?";
+          }
+          if (/(money|broke|bill|cost|debt|rent)/i.test(journalText)) {
+            return "Do you treat financial anxiety as an excuse to avoid dealing with your other, free-to-fix emotional problems?";
+          }
+          return "When an entire afternoon passes without an emergency, do you actively scan your memory to invent one?";
+        }
+
+        var followUps = [
+          "Having admitted to manufacturing friction, do you secretly view panic as your primary substitute for motivation?",
+          "When someone offers you a straightforward, actionable solution, is your first instinct to explain why it won't work for you?",
+          "Do you maintain over twenty open browser tabs as a spiritual extension of your unresolved emotional baggage?",
+          "If all your current problems were solved instantly right now, would you feel slightly bored and disappointed?"
+        ];
+        return followUps[Math.min(followUps.length - 1, qNum - 2)] || fallback;
+      }
+
+      // 5. Enter button confirmation
+      if (prompt.indexOf('Generate ONE short, pointed, satirical yes/no confirmation question') !== -1) {
+        var jText = (document.getElementById('journal') ? document.getElementById('journal').value : '').toLowerCase();
+        if (/(deadline|work|boss|project|client)/i.test(jText)) {
+          return "Before proceeding: Do you acknowledge that your stress is simply poor calendar management disguised as tragedy. Continue?";
+        }
+        if (/(sleep|tired|burnout|exhaust)/i.test(jText)) {
+          return "Given that you reported severe exhaustion, are you certain that violently spinning a mouse pointer is the best therapeutic intervention? Proceed?";
+        }
+        var enterQs = [
+          "Warning: Entering Stress Fixer 3.0 with this quantity of self-generated angst may void your warranty. Proceed regardless?",
+          "Corporate wellness checkpoint: Do you acknowledge that you are the sole architect of the baggage you just entered? Continue?",
+          "Are you absolutely certain you wish to proceed, or would you prefer to blame your workload for another 45 minutes?"
+        ];
+        return enterQs[Math.floor(Math.random() * enterQs.length)];
+      }
+
+      // 6. Journal live reaction
+      if (prompt.indexOf('typed this into a stress journal:') !== -1) {
+        var snippet = prompt.match(/stress journal: "([^"]+)"/);
+        var sText = snippet ? snippet[1].toLowerCase() : '';
+        
+        if (/(work|job|boss|deadline|client|code|deploy)/i.test(sText)) {
+          var wQuotes = [
+            "Telemetry detects acute corporate anxiety. Our algorithms classify this as 88% self-inflicted urgency.",
+            "Workplace friction logged. Corporate policy recommends reclassifying your panic as non-billable overhead.",
+            "Interesting. You appear to be treating arbitrary corporate milestones as literal existential threats."
+          ];
+          return wQuotes[Math.floor(Math.random() * wQuotes.length)];
+        }
+        if (/(sleep|tired|exhaust|drained|bed)/i.test(sText)) {
+          var tQuotes = [
+            "Cognitive battery critical. System notes you chose typing into the void over basic sleep hygiene.",
+            "Exhaustion registered. Have you considered that being perpetually depleted is not an accredited personality trait?",
+            "Severe fatigue logged. The void acknowledges your tiredness, but does not offer paid leave."
+          ];
+          return tQuotes[Math.floor(Math.random() * tQuotes.length)];
+        }
+        if (/(fail|life|why|pointless|void|stuck)/i.test(sText)) {
+          var eQuotes = [
+            "Philosophical despair detected. Enterprise Psychophysics recommends converting existential dread into productivity metrics.",
+            "The void has cataloged your existential crisis. Estimated market value: $0.00.",
+            "Dread logged. Life has no objective meaning, which technically makes your current stress an optional luxury."
+          ];
+          return eQuotes[Math.floor(Math.random() * eQuotes.length)];
+        }
+        var gQuotes = [
+          "Telemetry received. Your emotional throughput is currently yielding an ROI of negative twelve percent.",
+          "A fascinating confession. Our algorithms detect you are approximately 94% responsible for the tension described.",
+          "Text analyzed. Neutral Motivation Engine notes: this problem would dissipate if you ceased perceiving it."
+        ];
+        return gQuotes[Math.floor(Math.random() * gQuotes.length)];
+      }
+
+      return fallback;
+    }
+
+    async function askGemini(userPrompt, onResult, fallback, maxTokens) {
+      var key = getKey();
+      if (key && aiEnabled) {
+        try {
+          var res = await fetch(
+            'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' + key,
+            {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                system_instruction: { parts: [{ text: SF3_PERSONA }] },
+                contents: [{ role: 'user', parts: [{ text: userPrompt }] }],
+                generationConfig: { maxOutputTokens: maxTokens || 120, temperature: 1.1 }
+              })
+            }
+          );
+          var data = await res.json();
+          var text = (data.candidates && data.candidates[0] &&
+                      data.candidates[0].content && data.candidates[0].content.parts &&
+                      data.candidates[0].content.parts[0].text || '').trim();
+          if (text) {
+            onResult(text);
+            return;
+          }
+        } catch(e) {}
+      }
+      // Zero-key seamless cognitive engine fallback
+      var localOut = runLocalCognitiveEngine(userPrompt, fallback);
+      onResult(localOut || fallback);
+    }
+
+    /* API key overlay logic (Optional, Never blocks visitors) */
+    (function() {
+      var overlay   = document.getElementById('apiKeyOverlay');
+      var input     = document.getElementById('apiKeyInput');
+      var submit    = document.getElementById('apiKeySubmit');
+      var skip      = document.getElementById('apiKeySkip');
+      var closeTop  = document.getElementById('apiKeyCloseTop');
+      var clearBtn  = document.getElementById('apiKeyClear');
+      var errEl     = document.getElementById('apiKeyError');
+      var statusText= document.getElementById('aiStatusText');
+      var configBtn = document.getElementById('aiConfigBtn');
+
+      function updateStatus() {
+        var k = getKey();
+        if (k) {
+          aiEnabled = true;
+          if (statusText) statusText.textContent = 'AI: Gemini Cloud';
+          if (clearBtn) clearBtn.style.display = 'block';
+        } else {
+          aiEnabled = false;
+          if (statusText) statusText.textContent = 'AI: Active';
+          if (clearBtn) clearBtn.style.display = 'none';
+        }
+      }
+
+      function dismiss(key) {
+        if (key) {
+          localStorage.setItem('sf3_apikey', key);
+        }
+        overlay.style.display = 'none';
+        updateStatus();
+      }
+
+      // Always start with overlay hidden so visitors are never blocked
+      overlay.style.display = 'none';
+      updateStatus();
+
+      submit.addEventListener('click', function() {
+        var k = input.value.trim();
+        if (!k) { errEl.style.display='block'; errEl.textContent='Please paste your API key.'; return; }
+        if (k.length < 20) {
+          errEl.style.display='block';
+          errEl.textContent='That doesn\'t look like a valid key. It should start with AIza...';
+          return;
+        }
+        dismiss(k);
+      });
+
+      if (skip) {
+        skip.addEventListener('click', function() {
+          overlay.style.display = 'none';
+        });
+      }
+
+      if (closeTop) {
+        closeTop.addEventListener('click', function() {
+          overlay.style.display = 'none';
+        });
+      }
+
+      if (clearBtn) {
+        clearBtn.addEventListener('click', function() {
+          localStorage.removeItem('sf3_apikey');
+          sessionStorage.removeItem('sf3_apikey');
+          input.value = '';
+          updateStatus();
+          errEl.style.display = 'block';
+          errEl.style.color = 'var(--emerald)';
+          errEl.textContent = 'Cloud key removed. Built-in AI active.';
+          setTimeout(function(){ errEl.style.display = 'none'; errEl.style.color = '#fb7185'; }, 2000);
+        });
+      }
+
+      if (configBtn) {
+        configBtn.addEventListener('click', function() {
+          var k = getKey();
+          if (k) input.value = k;
+          updateStatus();
+          overlay.style.display = 'grid';
+        });
+      }
+
+      input.addEventListener('keydown', function(e) { if (e.key==='Enter') submit.click(); });
+    })();
+
+    /* =====================================================
+       APP STATE
+    ===================================================== */
     var currentStep = 0;
+
     var stepsEls = Array.prototype.slice.call(document.querySelectorAll('#steps .step'));
 
     function goTo(step) {
@@ -826,18 +1194,53 @@
     var charCount = document.getElementById('charCount');
     var charFill = document.getElementById('charFill');
     var quoteIndex = 0;
+    var quoteThrottle = null;
 
     journal.addEventListener('input', function () {
       var len = journal.value.length;
       charCount.textContent = len;
       charFill.style.width = Math.min(100, (len % 150) / 1.5) + '%';
-      if (len > 0 && len % 15 === 0) {
-        quoteIndex = (quoteIndex + 1) % QUOTES.length;
-        quoteEl.textContent = QUOTES[quoteIndex];
+      if (len > 0 && len % 25 === 0) {
+        // AI reactive quote
+        clearTimeout(quoteThrottle);
+        quoteThrottle = setTimeout(function() {
+          var snippet = journal.value.slice(-120);
+          askGemini(
+            'The user just typed this into a stress journal: "' + snippet + '". ' +
+            'Write ONE short, wry, enterprise-wellness-style observation about what they typed. ' +
+            'Sound like a slightly detached corporate therapist who finds this all very unsurprising.',
+            function(txt) {
+              quoteEl.classList.add('pulse');
+              quoteEl.textContent = txt;
+              setTimeout(function(){ quoteEl.classList.remove('pulse'); }, 700);
+            },
+            QUOTES[quoteIndex++ % QUOTES.length]
+          );
+        }, 600);
       }
     });
 
-    document.getElementById('enterBtn').addEventListener('click', function () { goTo(1); });
+    document.getElementById('enterBtn').addEventListener('click', function () {
+      var journalText = journal.value.trim();
+      var fallbackMsgs = [
+        "Are you absolutely sure you want to proceed with this amount of emotional baggage?",
+        "Is this really the best use of your time?",
+        "Did you consider just taking a walk instead?",
+        "Do you truly believe a web app can fix this?",
+        "Warning: Proceeding may cause irreversible self-awareness. Continue?"
+      ];
+      var fallback = fallbackMsgs[Math.floor(Math.random() * fallbackMsgs.length)];
+      askGemini(
+        'The user has written this in their stress journal: "' + (journalText || '[nothing]') + '". ' +
+        'Generate ONE short, pointed, satirical yes/no confirmation question to ask them before they proceed. ' +
+        'The question should gently imply that proceeding is questionable given what they wrote. ' +
+        'Sound like a concerned HR representative. End with a question mark.',
+        function(q) {
+          if (confirm(q || fallback)) goTo(1);
+        },
+        fallback
+      );
+    });
 
     /* =====================================================
        ZEN BIRD OVERLAY (Strict 3-second White Window)
@@ -845,17 +1248,38 @@
     var zen = document.getElementById('zen'), zenFail = document.getElementById('zenFail'), zenCount = document.getElementById('zenCount');
 
     function showZen(reasonText, onDone) {
+      var zenAudio = document.getElementById('zenAudio');
+      if (zenAudio) { zenAudio.currentTime = 0; zenAudio.play().catch(function(){}); }
+      
       zenFail.textContent = reasonText || "Verification vibe was slightly off.";
-      var n = 3; 
+      var n = 5; 
       zenCount.textContent = n; 
       zen.classList.add('show');
+      
+      // Speak "Breathe in" immediately
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        var msgIn = new SpeechSynthesisUtterance("Breathe in");
+        msgIn.rate = 0.7; msgIn.pitch = 0.8;
+        window.speechSynthesis.speak(msgIn);
+        
+        // Speak "Breathe out" after 2.5 seconds
+        setTimeout(function() {
+          if (zen.classList.contains('show')) {
+            var msgOut = new SpeechSynthesisUtterance("Breathe out");
+            msgOut.rate = 0.7; msgOut.pitch = 0.8;
+            window.speechSynthesis.speak(msgOut);
+          }
+        }, 2500);
+      }
       
       var t = setInterval(function () {
         n -= 1; 
         zenCount.textContent = n;
         if (n <= 0) { 
           clearInterval(t); 
-          zen.classList.remove('show'); 
+          zen.classList.remove('show');
+          if (zenAudio) zenAudio.pause();
           if (onDone) onDone(); 
         }
       }, 1000);
@@ -864,18 +1288,42 @@
     /* =====================================================
        STAGE 1 — EVASIVE CHECKBOX
     ===================================================== */
-    var robotCheck = document.getElementById('robotCheck'), cap1Hint = document.getElementById('cap1Hint'), evadeCount = 0;
-    robotCheck.addEventListener('mouseenter', function () {
-      if (evadeCount < 4) {
-        var maxX = 180, maxY = 50;
-        robotCheck.style.transform = 'translate(' + ((Math.random()*2-1)*maxX).toFixed(0) + 'px,' + ((Math.random()*2-1)*maxY).toFixed(0) + 'px)';
+    var robotCheck = document.getElementById('robotCheck'), 
+        cap1Hint = document.getElementById('cap1Hint'), 
+        chaseMotivation = document.getElementById('chaseMotivation'), 
+        robotBox = document.getElementById('robotBoxContainer'),
+        evadeCount = 0;
+        
+    var maxEvades = Math.floor(Math.random() * 8) + 6; // 6 to 13 evades
+    
+    robotBox.addEventListener('mouseenter', function () {
+      if (evadeCount < maxEvades) {
+        var maxX = window.innerWidth * 0.35, maxY = window.innerHeight * 0.35;
+        // Make it progressively smaller, dropping to ~20% of original size
+        var scale = 1 - (evadeCount / maxEvades) * 0.8;
+        
+        robotBox.style.transform = 'translate(' + ((Math.random()*2-1)*maxX).toFixed(0) + 'px,' + ((Math.random()*2-1)*maxY).toFixed(0) + 'px) scale(' + scale + ')';
+        robotBox.style.transition = 'transform 0.15s cubic-bezier(0.2, 0.8, 0.2, 1)';
+        
         evadeCount++;
-        cap1Hint.innerHTML = 'Nice try. <b>' + (4 - evadeCount) + '</b> attempts left.';
+        cap1Hint.innerHTML = 'Nice try. <b>' + (maxEvades - evadeCount) + '</b> attempts left.';
+        if (evadeCount === 4) {
+          chaseMotivation.style.display = 'block';
+          var motivations = [
+            "Keep chasing it! Proving you are human requires relentless pursuit of arbitrary goals!",
+            "Don't give up! A true human would never let a shrinking box defeat them.",
+            "Chase it! Your humanity depends on this trivial interaction!"
+          ];
+          chaseMotivation.textContent = motivations[Math.floor(Math.random() * motivations.length)];
+        }
       }
     });
+    
     robotCheck.addEventListener('click', function() {
-      robotCheck.classList.add('checked');
-      setTimeout(function() { goTo(2); }, 600);
+      if (evadeCount >= maxEvades) {
+        robotCheck.classList.add('checked');
+        setTimeout(function() { goTo(2); }, 600);
+      }
     });
 
     /* =====================================================
@@ -883,14 +1331,20 @@
     ===================================================== */
     var slot = document.getElementById('slot'), card = document.getElementById('card'), led = document.getElementById('led'), ledText = document.getElementById('ledText'), swipeMs = document.getElementById('swipeMs'), swipeTarget = document.getElementById('swipeTarget');
     var dragging = false, startTime = 0, startX = 0, cardStartLeft = 8;
-    var minSwipeTime = 450, maxSwipeTime = 650; // Ultra-narrow 200ms tolerance window
+    var minSwipeTime = 450, maxSwipeTime = 650; // Initial
+
+    var swipeHint = document.getElementById('swipeHint');
 
     function randomizeSwipeThresholds() {
-      // Randomize an extremely tight target window (e.g., span width of only 150ms to 200ms)
-      minSwipeTime = Math.floor(Math.random() * 200) + 400; // 400 to 600ms
-      var span = Math.floor(Math.random() * 50) + 120;      // 120 to 170ms span width
+      minSwipeTime = Math.floor(Math.random() * 300) + 200; // 200 to 500ms
+      var span = Math.floor(Math.random() * 60) + 40;      // 40 to 100ms span width (extremely narrow)
       maxSwipeTime = minSwipeTime + span;
-      swipeTarget.textContent = 'target speed: ' + minSwipeTime + 'ms - ' + maxSwipeTime + 'ms (Precision Required)';
+      swipeTarget.textContent = 'target: ' + minSwipeTime + '–' + maxSwipeTime + ' ms';
+      // Human-readable hint: describe pace relative to a second
+      var midMs = Math.round((minSwipeTime + maxSwipeTime) / 2);
+      if (midMs < 300) swipeHint.textContent = '⚡ Aim for a very snappy, quick flick — about ' + midMs + ' ms.';
+      else if (midMs < 500) swipeHint.textContent = '🎯 Aim for a firm, deliberate slide — about ' + midMs + ' ms.';
+      else swipeHint.textContent = '🐢 Aim for a slow, controlled push — about ' + midMs + ' ms.';
       card.style.left = '8px';
       ledText.textContent = 'AWAITING SWIPE';
       led.classList.remove('ok');
@@ -898,9 +1352,16 @@
 
     function maxTravel() { return slot.clientWidth - card.offsetWidth - 16; }
 
+    var liveTimer = null;
     card.addEventListener('pointerdown', function(e) {
       dragging = true; startTime = Date.now(); startX = e.clientX; cardStartLeft = card.offsetLeft;
       ledText.textContent = 'READING…'; card.setPointerCapture(e.pointerId); e.preventDefault();
+      // Live elapsed counter while dragging
+      liveTimer = setInterval(function() {
+        if (!dragging) { clearInterval(liveTimer); return; }
+        var live = Date.now() - startTime;
+        swipeMs.textContent = 'live: ' + live + ' ms — target ' + minSwipeTime + '–' + maxSwipeTime + ' ms';
+      }, 30);
     });
     window.addEventListener('pointermove', function(e) {
       if (!dragging) return;
@@ -910,6 +1371,7 @@
     window.addEventListener('pointerup', function() {
       if (!dragging) return;
       dragging = false;
+      clearInterval(liveTimer);
       var elapsed = Date.now() - startTime;
       var reached = card.offsetLeft >= (8 + maxTravel() - 6);
       swipeMs.textContent = 'swipe time: ' + elapsed + ' ms';
@@ -918,13 +1380,13 @@
         if (elapsed < minSwipeTime) {
           ledText.textContent = 'TOO FAST';
           led.classList.remove('ok');
-          showZen("Too fast! Micro-calibration failed due to excessive momentum.", function() {
+          showZen("Too fast (" + elapsed + "ms)! Needed at least " + minSwipeTime + "ms. Slow it down next time.", function() {
             randomizeSwipeThresholds();
           });
         } else if (elapsed > maxSwipeTime) {
           ledText.textContent = 'TOO SLOW';
           led.classList.remove('ok');
-          showZen("Too slow! Terminal rejected sub-optimal scan duration.", function() {
+          showZen("Too slow (" + elapsed + "ms)! Needed under " + maxSwipeTime + "ms. Speed it up next time.", function() {
             randomizeSwipeThresholds();
           });
         } else {
@@ -937,24 +1399,111 @@
     });
 
     /* =====================================================
-       STAGE 3 — COLOR MIXING (Harder: 6 choices grid, pick 2)
-    ===================================================== */
-    var mixingPool6 = [
-      { id: 1, name: "Unopened Email Orange", color: "#f97316", correct: true },
-      { id: 2, name: "Imposter Syndrome Cyan", color: "#06b6d4", correct: true },
-      { id: 3, name: "Expired Milk White", color: "#f8fafc", correct: false },
-      { id: 4, name: "Bureaucracy Grey", color: "#64748b", correct: false },
-      { id: 5, name: "Existential Dread Black", color: "#030712", correct: false },
-      { id: 6, name: "Panic Magenta", color: "#ec4899", correct: false }
+       STAGE 3 — COLOR MIXING (random challenge each attempt)
+    ================================================     */
+    var colorChallenges = [
+      {
+        targetName: "Despair Indigo", targetHex: "#3b185f",
+        hint: "Hint: Despair Indigo = Unopened Email Orange + Imposter Syndrome Cyan.",
+        pool: [
+          { id:1, name:"Unopened Email Orange",   color:"#f97316", correct:true  },
+          { id:2, name:"Imposter Syndrome Cyan",  color:"#06b6d4", correct:true  },
+          { id:3, name:"Expired Milk White",        color:"#f8fafc", correct:false },
+          { id:4, name:"Bureaucracy Grey",          color:"#64748b", correct:false },
+          { id:5, name:"Existential Dread Black",  color:"#030712", correct:false },
+          { id:6, name:"Panic Magenta",            color:"#ec4899", correct:false }
+        ]
+      },
+      {
+        targetName: "Midnight Anxiety Green", targetHex: "#064e3b",
+        hint: "Hint: Midnight Anxiety Green = Forgotten Password Teal + Spreadsheet Error Red.",
+        pool: [
+          { id:1, name:"Forgotten Password Teal", color:"#0d9488", correct:true  },
+          { id:2, name:"Spreadsheet Error Red",   color:"#dc2626", correct:true  },
+          { id:3, name:"LinkedIn Notification Blue",color:"#2563eb",correct:false },
+          { id:4, name:"Burnout Beige",            color:"#d6bcab", correct:false },
+          { id:5, name:"Overworked Ochre",         color:"#ca8a04", correct:false },
+          { id:6, name:"Expired Deadline Purple",  color:"#7c3aed", correct:false }
+        ]
+      },
+      {
+        targetName: "Corporate Dread Slate", targetHex: "#334155",
+        hint: "Hint: Corporate Dread Slate = Reply-All Ash + Passive-Aggressive Plum.",
+        pool: [
+          { id:1, name:"Reply-All Ash",            color:"#94a3b8", correct:true  },
+          { id:2, name:"Passive-Aggressive Plum",  color:"#581c87", correct:true  },
+          { id:3, name:"Motivational Poster Gold",  color:"#fbbf24", correct:false },
+          { id:4, name:"Wellness Email Green",      color:"#22c55e", correct:false },
+          { id:5, name:"Birthday Cake Pink",        color:"#f472b6", correct:false },
+          { id:6, name:"Unread Slack Orange",       color:"#f97316", correct:false }
+        ]
+      },
+      {
+        targetName: "Overstimulated Rose", targetHex: "#9f1239",
+        hint: "Hint: Overstimulated Rose = Notification Crimson + Fluorescent Lemon.",
+        pool: [
+          { id:1, name:"Notification Crimson",     color:"#be123c", correct:true  },
+          { id:2, name:"Fluorescent Lemon",         color:"#a3e635", correct:true  },
+          { id:3, name:"Procrastination Periwinkle",color:"#818cf8",correct:false },
+          { id:4, name:"Burnout Beige",             color:"#d6bcab", correct:false },
+          { id:5, name:"3am Teal",                  color:"#0d9488", correct:false },
+          { id:6, name:"Junk-Mail Yellow",          color:"#fde047", correct:false }
+        ]
+      },
+      {
+        targetName: "Inbox-Zero Mirage Teal", targetHex: "#134e4a",
+        hint: "Hint: Inbox-Zero Mirage Teal = Unsubscribe Button Cyan + Deadline Maroon.",
+        pool: [
+          { id:1, name:"Unsubscribe Button Cyan",  color:"#22d3ee", correct:true  },
+          { id:2, name:"Deadline Maroon",          color:"#881337", correct:true  },
+          { id:3, name:"Passive Violet",           color:"#7c3aed", correct:false },
+          { id:4, name:"False Hope Peach",         color:"#fdba74", correct:false },
+          { id:5, name:"Ghosted Lavender",         color:"#c4b5fd", correct:false },
+          { id:6, name:"Panic Magenta",            color:"#ec4899", correct:false }
+        ]
+      },
+      {
+        targetName: "Burnout Brown", targetHex: "#78350f",
+        hint: "Hint: Burnout Brown = Ambition Amber + Regret Navy.",
+        pool: [
+          { id:1, name:"Ambition Amber",           color:"#f59e0b", correct:true  },
+          { id:2, name:"Regret Navy",              color:"#1e3a5f", correct:true  },
+          { id:3, name:"Wellness Email Green",      color:"#22c55e", correct:false },
+          { id:4, name:"Existential Dread Black",  color:"#030712", correct:false },
+          { id:5, name:"Team-Meeting Mauve",       color:"#c084fc", correct:false },
+          { id:6, name:"Expired Milk White",       color:"#f8fafc", correct:false }
+        ]
+      }
     ];
+
+    var currentChallenge = null;
+    var usedChallengeIndices = [];
     var selectedMix6 = new Set();
 
+    function pickNextChallenge() {
+      if (usedChallengeIndices.length >= colorChallenges.length) usedChallengeIndices = [];
+      var available = [];
+      for (var i = 0; i < colorChallenges.length; i++) {
+        if (usedChallengeIndices.indexOf(i) === -1) available.push(i);
+      }
+      var idx = available[Math.floor(Math.random() * available.length)];
+      usedChallengeIndices.push(idx);
+      return colorChallenges[idx];
+    }
+
     function initMixingCaptcha() {
+      currentChallenge = pickNextChallenge();
       selectedMix6.clear();
-      var shuffled = mixingPool6.slice().sort(function() { return 0.5 - Math.random(); });
+
+      document.getElementById('targetSwatch').style.background = currentChallenge.targetHex;
+      document.getElementById('mixingPrompt').textContent =
+        'Target: ' + currentChallenge.targetName + ' (' + currentChallenge.targetHex + ')';
+      document.getElementById('hiddenColorHint').textContent = currentChallenge.hint;
+
+      var shuffled = currentChallenge.pool.slice().sort(function() { return 0.5 - Math.random(); });
       var grid = document.getElementById('ingredientsGrid6');
       grid.innerHTML = '';
-      
+
       shuffled.forEach(function(item) {
         var el = document.createElement('button');
         el.className = 'ingredient-btn';
@@ -979,68 +1528,183 @@
     }
 
     document.getElementById('mixConfirm').addEventListener('click', function() {
-      var correctIds = mixingPool6.filter(function(i){ return i.correct; }).map(function(i){ return i.id; });
+      var correctIds = currentChallenge.pool.filter(function(i){ return i.correct; }).map(function(i){ return i.id; });
       var userArr = Array.from(selectedMix6);
       var isAllCorrect = userArr.length === 2 && userArr.every(function(id){ return correctIds.includes(id); });
 
       if (isAllCorrect) {
         goTo(4);
       } else {
-        showZen("Chromatic Meltdown! Incorrect emotional ingredients selected.", function() {
-          initMixingCaptcha();
+        var pickedNames = Array.from(selectedMix6).map(function(pid) {
+          var found = currentChallenge.pool.find(function(p){ return p.id === pid; });
+          return found ? found.name : 'Unknown';
         });
+        var correctNames = currentChallenge.pool.filter(function(p){ return p.correct; }).map(function(p){ return p.name; });
+        var staticFails = [
+          "Do you even know what " + currentChallenge.targetName + " looks like?",
+          "Are you colorblind to your own emotional spectrum?",
+          "That combination doesn't exist in any known wellness framework.",
+          "Incorrect. A new colour awaits. Your aesthetic bottleneck has been logged."
+        ];
+        var staticFail = staticFails[Math.floor(Math.random() * staticFails.length)];
+
+        askGemini(
+          'In a colour-mixing captcha, the target was "' + currentChallenge.targetName + '" (' + currentChallenge.targetHex + '). ' +
+          'The correct ingredients were: ' + correctNames.join(' + ') + '. ' +
+          'The user instead picked: ' + pickedNames.join(' + ') + '. ' +
+          'Write ONE very short, cutting, satirical taunt about this specific wrong choice. ' +
+          'Reference the colour names. End with noting that a completely new colour challenge awaits.',
+          function(taunt) {
+            showZen("Chromatic Meltdown! " + (taunt || staticFail), function() {
+              initMixingCaptcha();
+            });
+          },
+          staticFail,
+          100
+        );
       }
     });
 
     /* =====================================================
-       STAGE 4 — RANDOMIZED AUDIT QUESTIONS
+       STAGE 4 — AI-DRIVEN AUDIT QUESTIONS
     ===================================================== */
     var auditBank = [
-      { q: "1. Do you invent complex mental deadlines for completely arbitrary tasks?", yes: "Confirmed. You write thrillers with no box office.", no: "Denial noted. Your tabs say otherwise." },
-      { q: "2. When nothing is wrong, do you scan the horizon for hidden catastrophes?", yes: "Peace treated as a trap. Classic.", no: "Statistical anomaly. Proceeding." },
-      { q: "3. Is your current stress a bespoke artisanal lifestyle choice?", yes: "Precisely. Handcrafted bottlenecks.", no: "Defense mechanism detected." },
-      { q: "4. Do you apologize to inanimate objects when you bump into them?", yes: "Polite, yet chronically self-blaming.", no: "Cold psychopath tendencies noted." },
-      { q: "5. Can you accept that nobody is forcing this workload except your own psyche?", yes: "Absolute clarity achieved. You are the architect.", no: "Delusion barrier active. Proceeding anyway." },
-      { q: "6. Do you rehearse arguments in the shower that happened three years ago?", yes: "Ah, the internal debate club champion.", no: "Remarkable emotional vacancy." },
-      { q: "7. Do you consider resting to be a shameful moral failure?", yes: "Capitalist guilt engine running at 100%.", no: "Suspiciously well-balanced. Moving on." }
+      { q: "Do you invent complex mental deadlines for completely arbitrary tasks?", yes: "Confirmed. You write thrillers with no box office.", no: "Denial noted. Your browser tabs say otherwise." },
+      { q: "When nothing is wrong, do you scan the horizon for hidden catastrophes?", yes: "Peace treated as a trap. Classic self-generated friction.", no: "Statistical anomaly. Proceeding with caution." },
+      { q: "Is your current stress a bespoke artisanal lifestyle choice?", yes: "Precisely. Handcrafted cognitive bottlenecks.", no: "Defense mechanism detected at the perimeter." },
+      { q: "Do you apologize to inanimate objects when you bump into them?", yes: "Polite, yet chronically over-allocated in empathy.", no: "Cold efficiency noted. Moving on." },
+      { q: "Can you accept that nobody is forcing this workload except your own psyche?", yes: "Absolute clarity achieved. You are the architect and the building.", no: "Delusion barrier active. Noted for the report." },
+      { q: "Do you rehearse arguments in the shower that happened three years ago?", yes: "The internal debate club never adjourns.", no: "Remarkable emotional asset management." },
+      { q: "Do you consider resting to be a shameful moral failure?", yes: "Capitalist guilt engine running at peak throughput.", no: "Suspiciously well-optimized. We are watching." },
+      { q: "Have you ever stress-eaten while on a 'wellness' call?", yes: "Irony throughput levels: critical.", no: "Implausible. The system notes your scepticism." },
+      { q: "Is your to-do list longer than your ability to care about it?", yes: "Classic inventory overflow. Textbook case.", no: "Either you are very efficient or very in denial." }
     ];
+
+    var auditHistory = [];   
     var activeAuditSteps = [];
     var currentAuditIdx = 0;
+    var yesCount = 0;
+    var auditQEl, auditRespEl, auditOptBox;
 
     function initAudit() {
-      var shuffled = auditBank.slice().sort(function() { return 0.5 - Math.random(); });
-      activeAuditSteps = shuffled.slice(0, 5);
+      auditHistory = [];
       currentAuditIdx = 0;
+      yesCount = 0;
+      activeAuditSteps = [];
+
+      auditQEl = document.getElementById('auditQuestionText');
+      auditRespEl = document.getElementById('auditResponseBubble');
+      auditOptBox = document.getElementById('auditOptions');
 
       document.getElementById('auditBox').style.display = 'block';
       document.getElementById('auditConclusion').style.display = 'none';
-      renderAuditStep();
+
+      var journalSnippet = (document.getElementById('journal').value || '').slice(0, 200);
+      auditQEl.textContent = 'Calibrating diagnostic matrix…';
+      auditRespEl.style.display = 'none';
+      auditOptBox.style.display = 'none';
+
+      askGemini(
+        'The user has written this in their stress journal: "' + (journalSnippet || 'nothing') + '". ' +
+        'Generate question 1 of 5 for a root-cause behavioral audit. ' +
+        'The question should be a yes/no question that probes a specific stress-generating behavior hinted at by what they wrote. ' +
+        'Be specific to what they said. Sound like a corporate HR therapist. ' +
+        'Return ONLY the question, no numbering, no extra text.',
+        function(q) {
+          var fallbackQ = auditBank[Math.floor(Math.random() * auditBank.length)];
+          activeAuditSteps.push({ q: q || fallbackQ.q, fallback: fallbackQ });
+          renderAuditStep();
+        },
+        null,
+        80
+      );
     }
 
     function renderAuditStep() {
       var step = activeAuditSteps[currentAuditIdx];
-      document.getElementById('auditQuestionText').textContent = step.q;
-      document.getElementById('auditResponseBubble').style.display = 'none';
-      document.getElementById('auditOptions').style.display = 'flex';
+      if (!step) return;
+      auditQEl.textContent = '(' + (currentAuditIdx + 1) + '/5) ' + step.q;
+      auditRespEl.style.display = 'none';
+      auditOptBox.style.display = 'flex';
     }
 
     document.querySelectorAll('.audit-opt-btn').forEach(function(btn) {
       btn.addEventListener('click', function() {
         var val = btn.getAttribute('data-val');
-        var step = activeAuditSteps[currentAuditIdx];
-        var respBubble = document.getElementById('auditResponseBubble');
-        respBubble.textContent = (val === 'yes') ? step.yes : step.no;
-        respBubble.style.display = 'block';
-        document.getElementById('auditOptions').style.display = 'none';
+        if (val === 'yes') yesCount++;
 
-        setTimeout(function() {
-          currentAuditIdx++;
-          if (currentAuditIdx < activeAuditSteps.length) { renderAuditStep(); }
-          else {
-            document.getElementById('auditBox').style.display = 'none';
-            document.getElementById('auditConclusion').style.display = 'block';
-          }
-        }, 1400);
+        var step = activeAuditSteps[currentAuditIdx];
+        auditOptBox.style.display = 'none';
+        auditRespEl.style.display = 'block';
+        auditRespEl.textContent = '…thinking…';
+
+        auditHistory.push({ q: step.q, a: val });
+
+        askGemini(
+          'Audit question asked: "' + step.q + '". User answered: ' + val.toUpperCase() + '. ' +
+          'Write ONE very short (max 12 words), wry, corporate-therapist-style reaction to this answer. ' +
+          'Subtly imply the answer reveals something unflattering about the user\'s cognitive throughput. No question marks.',
+          function(resp) {
+            auditRespEl.textContent = resp || (val === 'yes' ? step.fallback.yes : step.fallback.no);
+
+            setTimeout(function() {
+              currentAuditIdx++;
+              if (currentAuditIdx < 5) {
+                auditQEl.textContent = 'Formulating follow-up inquiry…';
+                auditRespEl.style.display = 'none';
+                auditOptBox.style.display = 'none';
+
+                var historyStr = auditHistory.map(function(h, i) {
+                  return 'Q' + (i+1) + ': "' + h.q + '" → ' + h.a.toUpperCase();
+                }).join(' | ');
+
+                askGemini(
+                  'Previous audit answers: ' + historyStr + '. ' +
+                  'Generate question ' + (currentAuditIdx + 1) + ' of 5 that logically follows from these answers. ' +
+                  'Dig deeper into the specific dysfunction pattern the answers are revealing. ' +
+                  'Yes/no format. Sound like a corporate wellness interrogator. Return ONLY the question.',
+                  function(nextQ) {
+                    var fallbackQ = auditBank[currentAuditIdx % auditBank.length];
+                    activeAuditSteps.push({ q: nextQ || fallbackQ.q, fallback: fallbackQ });
+                    renderAuditStep();
+                  },
+                  null, 80
+                );
+              } else {
+                document.getElementById('auditBox').style.display = 'none';
+                document.getElementById('satireQuoteText').textContent = '⏳ Generating your personal dysfunction profile…';
+                document.getElementById('auditConclusion').style.display = 'block';
+
+                var fullHistory = auditHistory.map(function(h, i) {
+                  return 'Q' + (i+1) + ': "' + h.q + '" → ' + h.a.toUpperCase();
+                }).join('\n');
+
+                askGemini(
+                  'A user has completed a 5-question behavioral stress audit. Here are their answers:\n' + fullHistory + '\n\n' +
+                  'Write a SHORT (3-4 sentence) satirical clinical diagnosis. ' +
+                  'Give it a ridiculous but official-sounding disorder name (e.g. "Proactive Catastrophe Cultivation Syndrome"). ' +
+                  'Conclude by subtly, humorously, firmly establishing that the user themselves is the root cause. ' +
+                  'Tone: darkly funny corporate wellness report. Do NOT use markdown.',
+                  function(diag) {
+                    var fallbackDiagnoses = [
+                      "Diagnostic complete. You are suspiciously well-adjusted, which means you're probably lying.",
+                      "Diagnostic complete. A severe case of chronic self-sabotage wrapped in optimistic denial.",
+                      "Diagnostic complete. You are an Olympic-level mental gymnast performing floor routines on anxiety landmines.",
+                      "Diagnostic complete. Pure, unfiltered neuroticism. You are the final boss of your own schedule.",
+                      "Diagnostic complete. Chronic boundary diffusion with a heavy side of self-imposed martyrdom.",
+                      "Diagnostic complete. You possess an exquisite talent for transforming minor inconveniences into full-scale existential crises."
+                    ];
+                    var fallbackDiag = fallbackDiagnoses[Math.floor(Math.random() * fallbackDiagnoses.length)];
+                    document.getElementById('satireQuoteText').textContent = '"' + (diag || fallbackDiag) + '"';
+                  },
+                  null, 250
+                );
+              }
+            }, 1600);
+          },
+          val === 'yes' ? step.fallback.yes : step.fallback.no,
+          80
+        );
       });
     });
 
@@ -1048,7 +1712,7 @@
 
     /* =====================================================
        STAGE 5 — TERMS
-    ===================================================== */
+    ================================================     */
     var agreeBoxes = Array.prototype.slice.call(document.querySelectorAll('#agree input[data-agree]'));
     var initBtn = document.getElementById('initBtn');
     agreeBoxes.forEach(function (cb) {
@@ -1061,7 +1725,7 @@
 
     /* =====================================================
        STAGE 6 — KINETIC AUDIO THERAPY
-    ===================================================== */
+    ================================================     */
     var audioEl = document.getElementById('audio'), needle = document.getElementById('needle'), rpmVal = document.getElementById('rpmVal'), rateVal = document.getElementById('rateVal'), calmFill = document.getElementById('calmFill'), calmVal = document.getElementById('calmVal'), audioStatus = document.getElementById('audioStatus'), forcePlay = document.getElementById('forcePlay');
     var therapyActive = false, lastAngle = null, lastMoveTime = 0, smoothedSpeed = 0, displayAngle = 0, calmness = 0, lastFrame = 0;
     var synth = { ctx: null, gain: null, timer: null, useFallback: false, playing: false, rate: 1 };
@@ -1132,23 +1796,36 @@
       if (rate < 0.3) {
         if (synth.playing || (!audioBroken && !audioEl.paused)) { pauseAudio(); audioStatus.textContent = 'Audio: paused — spin cursor'; }
       } else {
-        if (!audioBroken) { try { audioEl.playbackRate = Math.max(0.0625, rate); } catch(e){} }
+        if (!audioBroken) { try { audioEl.volume = Math.min(1, rate / 3); } catch(e){} }
         synth.rate = rate; if ((!audioBroken && audioEl.paused) || (synth.useFallback && !synth.playing)) playAudio();
-        audioStatus.textContent = 'Audio: playing @ ' + rate.toFixed(2) + '×';
+        audioStatus.textContent = 'Audio: playing @ vol ' + Math.round(Math.min(1, rate / 3) * 100) + '%';
       }
 
-      if (rpm > 160) {
-        calmness -= dt * 25;
+      var targetRpmLow = 40 + (Math.random() * 20);
+      var targetRpmHigh = 160 - (Math.random() * 30);
+
+      if (rpm > targetRpmHigh) {
+        var decay = 25 + (calmness * 0.8);
+        calmness -= dt * decay;
         audioStatus.textContent = '⚠️ TOO FAST! Calmness draining due to panic overflow!';
-      } else if (rpm > 40) {
+        calmFill.parentElement.classList.add('panic');
+        
+        if (Math.random() < 0.1) {
+          var spikes = ['spike1', 'spike2', 'spike3', 'spike4', 'spike5'];
+          var s = document.getElementById(spikes[Math.floor(Math.random() * spikes.length)]);
+          if (s) { s.volume = 1.0; s.play().catch(function(){}); }
+        }
+      } else if (rpm > targetRpmLow) {
         calmness += dt * 14;
+        calmFill.parentElement.classList.remove('panic');
       } else {
         calmness -= dt * 10;
+        calmFill.parentElement.classList.remove('panic');
       }
       calmness = Math.max(0, Math.min(100, calmness));
       calmFill.style.width = calmness + '%'; calmVal.textContent = Math.round(calmness);
 
-      if (calmness >= 100) { therapyActive = false; pauseAudio(); goTo(7); return; }
+      if (calmness >= 100) { therapyActive = false; pauseAudio(); calmFill.parentElement.classList.remove('panic'); goTo(7); return; }
       requestAnimationFrame(therapyLoop);
     }
 
@@ -1160,13 +1837,12 @@
 
     /* =====================================================
        STAGE 7 — INCINERATOR & UPDATED NARRATIVE SEQUENCE
-    ===================================================== */
+    ================================================     */
     var slides = [
       "Welcome to the Incineration Chamber. Your red sheet of stress has been placed in the furnace alongside a heap of other digital garbage.",
       "As you can see, the fire is blazing and all the unnecessary noise of your day is beginning to turn to cinders.",
       "Thermodynamic Justification: According to Enterprise Psychophysics, burning text symbols converts cognitive anxiety into thermal radiation.",
       "Oh dear! The furnace air is running low and the flame is dying down. You must rapidly pump the air blower to reach 200% pressure!",
-      /* Updated sequence */
       "Everything in the pile burned to ash...",
       "...except the red sheet. Your stress is thermally indestructible.",
       "Despite all thermodynamic efforts, your mental load remains completely permanent and immutable. You are carrying an eternal boulder.",
@@ -1180,6 +1856,15 @@
     function initIncinerator() {
       currentSlide = 0; pumpVal = 50; pumpStarted = false; clickCount = 0;
       userStressBrick.style.opacity = '1'; userStressBrick.style.transform = 'scale(1)';
+      var journalText = document.getElementById('journal').value;
+      userStressBrick.title = journalText.substring(0, 150) || 'Your Red Sheet of Stress';
+      userStressBrick.textContent = journalText.substring(0, 12);
+      userStressBrick.style.fontSize = "5px";
+      userStressBrick.style.color = "rgba(255,255,255,0.9)";
+      userStressBrick.style.overflow = "hidden";
+      userStressBrick.style.lineHeight = "1";
+      userStressBrick.style.padding = "2px";
+      
       pileGoods.querySelectorAll('.pile-item:not(.user-stress)').forEach(function(i) { i.style.opacity = '1'; });
       furnaceFire.style.background = 'linear-gradient(0deg, #ef4444, #f59e0b, transparent)';
       slideAgreeCheck.checked = false;
@@ -1242,13 +1927,19 @@
 
     function startHardcorePumpChallenge() {
       pumpVal = 50; pumpStarted = false; clickCount = 0;
+      var frailMan = document.getElementById('frailMan');
       if (pumpTimer) clearInterval(pumpTimer);
       
       pumpTimer = setInterval(function() {
         if (!pumpStarted) return;
         
-        pumpVal -= 4.2;
+        // Increased decay rate by 50% (baseDrain 1.0 -> 1.5, curve multiplier increased)
+        var baseDrain = 1.5; 
+        var expDrain = baseDrain + (pumpVal / 33); 
+        pumpVal -= expDrain;
+        
         pumpFill.style.width = Math.max(0, Math.min(100, (pumpVal / 200) * 100)) + '%';
+        if (frailMan) frailMan.style.transform = 'rotate(' + (Math.random() * 20 - 10) + 'deg)';
         
         if (pumpVal <= 0) {
           clearInterval(pumpTimer);
@@ -1264,7 +1955,14 @@
         pumpStarted = true;
       }
       
-      pumpVal = Math.min(200, pumpVal + 9);
+      var frailMan = document.getElementById('frailMan');
+      if (frailMan) {
+        frailMan.style.transform = 'scale(1.2)';
+        setTimeout(function(){ frailMan.style.transform = 'scale(1) rotate(0deg)'; }, 50);
+      }
+      
+      // Slightly reduced gain per click to balance the 50% higher air decay
+      pumpVal = Math.min(200, pumpVal + 22); 
       pumpFill.style.width = Math.max(0, Math.min(100, (pumpVal / 200) * 100)) + '%';
 
       if (pumpVal >= 200) {
