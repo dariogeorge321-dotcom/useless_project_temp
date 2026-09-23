@@ -914,6 +914,7 @@
       if (prompt.indexOf('Write a SHORT (3-4 sentence) satirical clinical diagnosis') !== -1) {
         var yesMatches = (prompt.match(/→ YES/g) || []).length;
         var noMatches  = (prompt.match(/→ NO/g) || []).length;
+        var journalText = (document.getElementById('journal') ? document.getElementById('journal').value : '').toLowerCase();
         
         var syndromes = [
           "Proactive Hyper-Manufactured Bottleneck Complex (Grade IV)",
@@ -923,12 +924,22 @@
         ];
         var sName = syndromes[yesMatches >= 3 ? 1 : (noMatches >= 3 ? 2 : 0)];
 
-        var diagnoses = [
-          "Clinical Assessment: " + sName + ". Diagnostic telemetry confirms that approximately 96.8% of your current cognitive load is self-curated fiction produced with exceptional dedication. While you entered this intake claiming external pressures, the audit demonstrates that you are both the arsonist and the emergency response team of your daily schedule. We recommend accepting that serenity was readily available to you at all times, but was declined due to a profound addiction to dramatic tension.",
-          "Clinical Assessment: " + sName + ". Comprehensive audit telemetry reveals an individual performing gold-medal mental gymnastics over low-stakes ambient stimuli. You have systematically engineered every bottleneck in your life while maintaining complete theatrical innocence. The system officially finds you 100% guilty of your own stress. Proceed immediately to pointer therapy to work off this self-inflicted deficit.",
-          "Clinical Assessment: " + sName + ". Telemetry analysis indicates that peace of mind has repeatedly attempted to enter your life, but was rejected by your internal security policy. You have curated an emotional inventory so excessively bloated that standard coping mechanisms have collapsed under the weight of your artisanal anxiety. You are the architect, contractor, and tenant of your own dilemma."
-        ];
-        return diagnoses[Math.floor(Math.random() * diagnoses.length)];
+        var customObs = "Diagnostic telemetry confirms your cognitive load is entirely self-curated. ";
+        if (/(work|job|boss|deadline|meeting|slack|code|deploy)/i.test(journalText)) {
+            customObs = "Your fixation on professional milestones indicates you've replaced your inner peace with a corporate task tracker. ";
+        } else if (/(sleep|tired|exhaust|drained)/i.test(journalText)) {
+            customObs = "Your weaponized exhaustion is a brilliant strategy to avoid processing reality. ";
+        } else if (/(people|friend|relationship|social)/i.test(journalText)) {
+            customObs = "Your interpersonal anxiety is operating at peak enterprise efficiency, anticipating conflicts that do not exist. ";
+        } else if (/(money|broke|bill|cost)/i.test(journalText)) {
+            customObs = "Your financial angst has been perfectly optimized to overshadow all other free-to-fix emotional deficits. ";
+        }
+        
+        var yesNoObs = yesMatches > noMatches ? 
+            "The audit proves you actively engineer these bottlenecks while maintaining complete theatrical innocence." :
+            "Your relentless denial in this audit only confirms your fierce dedication to defending your self-imposed misery.";
+
+        return "Clinical Assessment: " + sName + ". " + customObs + yesNoObs + " The system officially finds you 100% guilty of your own stress.";
       }
 
       // 3. Audit Reaction Bubble
@@ -1286,48 +1297,82 @@
     }
 
     /* =====================================================
-       STAGE 1 — EVASIVE CHECKBOX
+       STAGE 1 — EVASIVE CHECKBOX (only the checkbox runs, not the card)
     ===================================================== */
     var robotCheck = document.getElementById('robotCheck'), 
         cap1Hint = document.getElementById('cap1Hint'), 
         chaseMotivation = document.getElementById('chaseMotivation'), 
         robotBox = document.getElementById('robotBoxContainer'),
         evadeCount = 0;
-        
-    var maxEvades = Math.floor(Math.random() * 8) + 6; // 6 to 13 evades
-    
-    robotBox.addEventListener('mouseenter', function () {
+
+    var maxEvades = Math.floor(Math.random() * 6) + 7; // 7–12 evades
+    var cbSize = 34; // checkbox is 30px + a little breathing room
+
+    // One-time: detach the checkbox from the card and float it fixed over the screen
+    function detachCheckbox() {
+      var r = robotCheck.getBoundingClientRect();
+      robotCheck.style.position   = 'fixed';
+      robotCheck.style.width      = '30px';
+      robotCheck.style.height     = '30px';
+      robotCheck.style.left       = r.left + 'px';
+      robotCheck.style.top        = r.top  + 'px';
+      robotCheck.style.margin     = '0';
+      robotCheck.style.zIndex     = '99999';
+      robotCheck.style.cursor     = 'pointer';
+      robotCheck.style.transition = 'left 0.12s cubic-bezier(0.2,0.8,0.2,1), top 0.12s cubic-bezier(0.2,0.8,0.2,1)';
+      // Remove the placeholder space it left behind in the card
+      var ghost = document.createElement('div');
+      ghost.style.width = '30px'; ghost.style.height = '30px'; ghost.style.flexShrink = '0';
+      robotCheck.parentNode.insertBefore(ghost, robotCheck);
+      document.body.appendChild(robotCheck);
+    }
+
+    function teleportCheckbox() {
+      // Shrink from 30px → 4px over evade count
+      var size = Math.max(4, Math.round(30 - (evadeCount / maxEvades) * 26));
+      robotCheck.style.width  = size + 'px';
+      robotCheck.style.height = size + 'px';
+
+      // Dead-simple bounds using current size
+      var pad = 20;
+      var maxX = window.innerWidth  - size - pad;
+      var maxY = window.innerHeight - size - pad;
+      var tx = pad + Math.random() * Math.max(0, maxX - pad);
+      var ty = pad + Math.random() * Math.max(0, maxY - pad);
+      robotCheck.style.left = Math.round(tx) + 'px';
+      robotCheck.style.top  = Math.round(ty) + 'px';
+    }
+
+    robotCheck.addEventListener('mouseenter', function () {
       if (evadeCount < maxEvades) {
-        var maxX = window.innerWidth * 0.35, maxY = window.innerHeight * 0.35;
-        // Make it progressively smaller, dropping to ~20% of original size
-        var scale = 1 - (evadeCount / maxEvades) * 0.8;
-        
-        robotBox.style.transform = 'translate(' + ((Math.random()*2-1)*maxX).toFixed(0) + 'px,' + ((Math.random()*2-1)*maxY).toFixed(0) + 'px) scale(' + scale + ')';
-        robotBox.style.transition = 'transform 0.15s cubic-bezier(0.2, 0.8, 0.2, 1)';
-        
+        if (evadeCount === 0) detachCheckbox();
+        teleportCheckbox();
         evadeCount++;
         cap1Hint.innerHTML = 'Nice try. <b>' + (maxEvades - evadeCount) + '</b> attempts left.';
         if (evadeCount === 4) {
           chaseMotivation.style.display = 'block';
           var motivations = [
             "Keep chasing it! Proving you are human requires relentless pursuit of arbitrary goals!",
-            "Don't give up! A true human would never let a shrinking box defeat them.",
+            "Don't give up! A true human would never let a tiny box defeat them.",
             "Chase it! Your humanity depends on this trivial interaction!"
           ];
           chaseMotivation.textContent = motivations[Math.floor(Math.random() * motivations.length)];
         }
       }
     });
-    
+
     robotCheck.addEventListener('click', function() {
       if (evadeCount >= maxEvades) {
         robotCheck.classList.add('checked');
-        setTimeout(function() { goTo(2); }, 600);
+        setTimeout(function() {
+          robotCheck.style.display = 'none'; // remove the floating checkbox ghost
+          goTo(2);
+        }, 600);
       }
     });
 
     /* =====================================================
-       STAGE 2 — CARD SWIPE (Much Harder Ultra-Narrow Window)
+       STAGE 2 — CARD SWIPE (Much Harder Randomized Window)
     ===================================================== */
     var slot = document.getElementById('slot'), card = document.getElementById('card'), led = document.getElementById('led'), ledText = document.getElementById('ledText'), swipeMs = document.getElementById('swipeMs'), swipeTarget = document.getElementById('swipeTarget');
     var dragging = false, startTime = 0, startX = 0, cardStartLeft = 8;
@@ -1933,10 +1978,11 @@
       pumpTimer = setInterval(function() {
         if (!pumpStarted) return;
         
-        // Increased decay rate by 50% (baseDrain 1.0 -> 1.5, curve multiplier increased)
+        // Drain increases exponentially as pressure builds
         var baseDrain = 1.5; 
-        var expDrain = baseDrain + (pumpVal / 33); 
-        pumpVal -= expDrain;
+        var curveDrain = Math.pow(pumpVal / 50, 1.6);
+        var totalDrain = baseDrain + curveDrain;
+        pumpVal -= totalDrain;
         
         pumpFill.style.width = Math.max(0, Math.min(100, (pumpVal / 200) * 100)) + '%';
         if (frailMan) frailMan.style.transform = 'rotate(' + (Math.random() * 20 - 10) + 'deg)';
@@ -1961,8 +2007,9 @@
         setTimeout(function(){ frailMan.style.transform = 'scale(1) rotate(0deg)'; }, 50);
       }
       
-      // Slightly reduced gain per click to balance the 50% higher air decay
-      pumpVal = Math.min(200, pumpVal + 22); 
+      // Gain increases with total clicks so the user passes after a good struggle
+      var gain = 6 + (clickCount * 0.12); 
+      pumpVal = Math.min(200, pumpVal + gain); 
       pumpFill.style.width = Math.max(0, Math.min(100, (pumpVal / 200) * 100)) + '%';
 
       if (pumpVal >= 200) {
